@@ -1,0 +1,9 @@
+rootProject.name = 'shin-board'
+
+include 'common'
+include 'common:snowflake'
+
+include 'infra'
+include 'infra:discovery'
+
+include 'service'
