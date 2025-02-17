@@ -7,6 +7,7 @@ import shin.board.article.entity.Article;
 import shin.board.article.repository.ArticleRepository;
 import shin.board.article.service.request.ArticleCreateRequest;
 import shin.board.article.service.request.ArticleUpdateRequest;
+import shin.board.article.service.response.ArticlePageResponse;
 import shin.board.article.service.response.ArticleResponse;
 import shin.board.common.snowflake.Snowflake;
 
@@ -45,5 +46,17 @@ public class ArticleService {
     @Transactional
     public void delete(Long articleId) {
         articleRepository.deleteById(articleId);
+    }
+
+    public ArticlePageResponse readAll(Long boardId, Long page, Long pageSize) {
+        return ArticlePageResponse.of(
+                articleRepository.findAll(boardId, (page - 1) * pageSize, pageSize).stream()
+                        .map(ArticleResponse::from)
+                        .toList(),
+                articleRepository.count(
+                        boardId,
+                        PageCalculator.calculatePageLimit(page, pageSize, 10L)
+                )
+        );
     }
 }
