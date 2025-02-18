@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import shin.board.article.entity.Article;
 import shin.board.article.repository.ArticleRepository;
 import shin.board.article.service.request.ArticleCreateRequest;
+import shin.board.article.service.request.ArticleSearch;
 import shin.board.article.service.request.ArticleUpdateRequest;
 import shin.board.article.service.response.ArticlePageResponse;
 import shin.board.article.service.response.ArticleResponse;
@@ -48,14 +49,14 @@ public class ArticleService {
         articleRepository.deleteById(articleId);
     }
 
-    public ArticlePageResponse readAll(Long boardId, Long page, Long pageSize) {
+    public ArticlePageResponse readAll(ArticleSearch search) {
         return ArticlePageResponse.of(
-                articleRepository.findAll(boardId, (page - 1) * pageSize, pageSize).stream()
+                articleRepository.findAll(search.getBoardId(), search.getOffset(), search.getPageSize()).stream()
                         .map(ArticleResponse::from)
                         .toList(),
                 articleRepository.count(
-                        boardId,
-                        PageCalculator.calculatePageLimit(page, pageSize, 10L)
+                        search.getBoardId(),
+                        search.getCountLimit()
                 )
         );
     }

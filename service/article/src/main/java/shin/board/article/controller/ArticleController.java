@@ -1,13 +1,16 @@
 package shin.board.article.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import shin.board.article.service.ArticleService;
 import shin.board.article.service.request.ArticleCreateRequest;
+import shin.board.article.service.request.ArticleSearch;
 import shin.board.article.service.request.ArticleUpdateRequest;
 import shin.board.article.service.response.ArticlePageResponse;
 import shin.board.article.service.response.ArticleResponse;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class ArticleController {
@@ -21,11 +24,9 @@ public class ArticleController {
 
     @GetMapping("/v1/articles")
     public ArticlePageResponse readAll(
-            @RequestParam("boardId") Long boardId,
-            @RequestParam("page") Long page,
-            @RequestParam("pageSize") Long pageSize
+            @ModelAttribute ArticleSearch search
     ) {
-        return articleService.readAll(boardId, page, pageSize);
+        return articleService.readAll(search);
     }
 
     @PostMapping("/v1/articles")
